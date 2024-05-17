@@ -1,9 +1,11 @@
 package org.iesvdm.appointment.service.impl;
 
 import net.bytebuddy.asm.Advice;
+import org.assertj.core.api.Assertions;
 import org.iesvdm.appointment.entity.Appointment;
 import org.iesvdm.appointment.entity.AppointmentStatus;
 import org.iesvdm.appointment.entity.Customer;
+import org.iesvdm.appointment.entity.ExchangeRequest;
 import org.iesvdm.appointment.repository.AppointmentRepository;
 import org.iesvdm.appointment.repository.ExchangeRequestRepository;
 import org.iesvdm.appointment.repository.impl.AppointmentRepositoryImpl;
@@ -15,6 +17,11 @@ import org.mockito.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyDouble;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 
 public class ExchangeServiceImplTest {
 
@@ -81,7 +88,23 @@ public class ExchangeServiceImplTest {
      */
     @Test
     void checkIfEligibleForExchange() {
+        //Creamos las citas
+        Appointment appointment1= spy(new Appointment(1,2,"1"));
+        Appointment appointment2= spy(new Appointment(1,2,"3"));
 
+        appointmentRepository.getOne(1);
+        appointmentRepository.getOne(2);
+
+        //when
+        //Guardamos las citas
+        AppointmentRepository.save(appointment1);
+        AppointmentRepository.save(appointment2);
+        appointmentRepository.getOne(appointment1.getId());
+
+        //then
+        //Al obtener los datos, tendremos true
+        Assertions.assertThat(exchangeService.checkIfEligibleForExchange(3),true);
+        Assertions.assertThat(exchangeService.checkIfEligibleForExchange(1), true);
     }
 
 
@@ -96,6 +119,20 @@ public class ExchangeServiceImplTest {
      */
     @Test
     void getEligibleAppointmentsForExchangeTest() {
+        //Creamos las citas. LA 2ª empieza 24 horas más tarde, por lo tanto, la cita del appointment2 será del dia siguiente
+        Appointment appointment1= spy(new Appointment(12:30,14,"1"));
+        Appointment appointment2= spy(new Appointment(12:30,15,"3"));
+
+        //when Cuando los guardamos
+        AppointmentRepository.save(appointment1);
+        AppointmentRepository.save(appointment2);
+
+        //then Comprobamos con el captor
+        //PAra elo, primero cogemos el appointmentRepository y al hacerle el captor, creamos una coleccion de integer donde se almacenarán los códigos de las citas de las personas
+        appointmentRepository.getOne(3);
+        ArgumentCaptor<Integer> idCaptor= ArgumentCaptor.forClass(Integer.class);
+        //Get All VAlues me da fallos
+        verify(appointmentRepository.getOne(idCaptor.capture().getClass());
 
     }
 
@@ -106,7 +143,17 @@ public class ExchangeServiceImplTest {
      */
     @Test
     void checkIfExchangeIsPossibleTest() {
+        //given DAdo dos citas usando stub (spy)
+        Appointment ap1= spy(new Appointment(2,3,1234));
+        Appointment ap2= spy(new Appointment(3,4,4231));
 
+        //then Cuando los guardamos. comprobamos que....
+        AppointmentRepository.add(ap1);
+        AppointmentRepository.add(ap2);
+
+        //when Cuando no se cumple la condición, lanzamos el mensaje de excepcion
+        //eN la estructura de la excepcion me falta algo y por eso después del when se me marca en rojo
+        Mockito.doThrow(RuntimeException.class("Unauthorized").when(AppointmentRepository).userId(any(), anyDouble());
     }
 
     /**
@@ -119,6 +166,19 @@ public class ExchangeServiceImplTest {
      * Verfifica se invoca al método con el exchangeRequest del stub.
      */
      void rejectExchangeTest() {
+         //given Dado una cita usando Spy....
+         Appointment ap1= spy(new Appointment(2,3,1234));
+
+         //when (Cuando lo guardemos...)
+         exchangeRequestRepository.save(ap1.getExchangeRequest());
+
+
+         //then Comprobamos con el captor
+         //PAra elo, primero cogemos el appointmentRepository y al hacerle el captor, creamos una coleccion de integer donde se almacenarán los códigos de las citas de las personas
+         appointmentRepository.getOne(1234);
+         ArgumentCaptor<Integer> idCaptor= ArgumentCaptor.forClass(Integer.class);
+         //Get All VAlues me da fallos para comprobar y verificar si es correcto
+         verify(exchangeRequestRepository.getOne(idCaptor.capture().getClass()));
 
      }
 

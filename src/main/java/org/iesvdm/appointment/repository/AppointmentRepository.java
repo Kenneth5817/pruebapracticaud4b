@@ -1,17 +1,23 @@
 package org.iesvdm.appointment.repository;
 
 
+import org.assertj.core.api.AbstractBooleanArrayAssert;
 import org.iesvdm.appointment.entity.Appointment;
-import org.iesvdm.appointment.entity.ExchangeRequest;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 public interface AppointmentRepository {
 
-    public Appointment getOne(int appointmentId);
+    static void add(Appointment appointment1) {
+    }
 
-    public void save(Appointment appointment);
+    static <SELF extends AbstractBooleanArrayAssert<SELF>> AbstractBooleanArrayAssert<SELF> findAll() {
+    }
+
+    public Appointment getOne(Class<? extends Integer> appointmentId);
+
+    public static void save(Appointment appointment);
 
     public List<Appointment> findCanceledByUser(int userId);
 

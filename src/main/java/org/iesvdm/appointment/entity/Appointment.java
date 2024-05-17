@@ -39,6 +39,9 @@ public class Appointment extends BaseEntity implements Comparable<Appointment> {
         this.exchangeRequest = exchangeRequest;
     }
 
+    public Appointment(int i) {
+    }
+
     @Override
     public int compareTo(Appointment o) {
         return this.getStart().compareTo(o.getStart());
@@ -100,4 +103,6 @@ public class Appointment extends BaseEntity implements Comparable<Appointment> {
     public void setExchangeRequest(ExchangeRequest exchangeRequest) {
         this.exchangeRequest = exchangeRequest;
     }
+
+    
 }

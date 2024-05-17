@@ -18,7 +18,7 @@ public class AppointmentRepositoryImpl implements AppointmentRepository {
     }
 
     @Override
-    public Appointment getOne(int appointmentId) {
+    public Appointment getOne(Class<? extends Integer> appointmentId) {
         return appointments.stream().filter(appointment -> appointment.getId() == appointmentId)
                 .findAny()
                 .orElse(null);
